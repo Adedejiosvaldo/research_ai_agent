@@ -7,6 +7,9 @@ import logging
 import os
 import json
 from pathlib import Path
+from chromadb.config import Settings
+import chromadb
+from chromadb.types import Collection, Document
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -25,6 +28,15 @@ class MarketAnalysisCrew:
     def __init__(self, config: Optional[CrewConfig] = None):
         self.config = config or CrewConfig()
         self._setup_llm()
+
+
+
+    def __setup_chroma(self) -> None:
+        """Initialize the ChromaDB client."""
+        self.chroma_client = chromadb.Client()
+        self.results_collection = self.chroma_client.get_or_create_collection("market_analysis_results")
+
+
 
     def _setup_llm(self) -> None:
         """Initialize the LLM with configuration."""
