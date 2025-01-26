@@ -7,10 +7,11 @@ import logging
 import os
 import json
 from pathlib import Path
-from chromadb.config import Settings
-import chromadb
-from chromadb.types import Collection, Document
+from langchain.vectorstores import Chroma
 
+from ..src.memory.vectorstore import VectorStore
+from ..src.tools.tavily import TavilyResearchTool
+from ..src.tools.serper import SerperSearchTool
 # Configure logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -30,11 +31,6 @@ class MarketAnalysisCrew:
         self._setup_llm()
 
 
-
-    def __setup_chroma(self) -> None:
-        """Initialize the ChromaDB client."""
-        self.chroma_client = chromadb.Client()
-        self.results_collection = self.chroma_client.get_or_create_collection("market_analysis_results")
 
 
 
@@ -122,9 +118,9 @@ class MarketAnalysisCrew:
         return {
             "raw_output": result.raw,
             "json_output": result.json_dict if hasattr(result, 'json_dict') else None,
-            "pydantic_output": str(result.pydantic) if hasattr(result, 'pydantic') else None,
-            "tasks_output": result.tasks_output,
-            "token_usage": result.token_usage
+            # "pydantic_output": str(result.pydantic) if hasattr(result, 'pydantic') else None,
+            # "tasks_output": result.tasks_output,
+            # "token_usage": result.token_usage
         }
 
 def main():
